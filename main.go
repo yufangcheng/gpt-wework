@@ -5,14 +5,15 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
+	//"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	panic("Error loading .env file")
+	// }
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.GET("/ping", Ping)
 	r.GET("/wechat/check", service.CheckWeixinSign)

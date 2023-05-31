@@ -212,6 +212,9 @@ func CheckWeixinSign(c *gin.Context) {
 	token := token
 	receiverId := corpid
 	encodingAeskey := encodingAesKey
+        
+    fmt.Printf("token: %s, corpid: %s, encodingAesKey: %s", token, corpid, encodingAesKey)
+
 	wxcpt := NewWXBizMsgCrypt(token, encodingAeskey, receiverId, 1)
 	/*
 	   	------------使用示例一：验证回调URL---------------
@@ -226,20 +229,15 @@ func CheckWeixinSign(c *gin.Context) {
 	        2.验证消息体签名的正确性
 	        3. 解密出echostr原文，将原文当作Get请求的response，返回给企业微信
 	        第2，3步可以用企业微信提供的库函数VerifyURL来实现。
-
 	*/
 	// 解析出url上的参数值如下：
-	// verifyMsgSign := HttpUtils.ParseUrl("msg_signature")
 	verifyMsgSign := c.Query("msg_signature")
-	// verifyTimestamp := HttpUtils.ParseUrl("timestamp")
 	verifyTimestamp := c.Query("timestamp")
-	// verifyNonce := HttpUtils.ParseUrl("nonce")
 	verifyNonce := c.Query("nonce")
-	// verifyEchoStr := HttpUtils.ParseUrl("echoStr")
 	verifyEchoStr := c.Query("echostr")
 	echoStr, cryptErr := wxcpt.VerifyURL(verifyMsgSign, verifyTimestamp, verifyNonce, verifyEchoStr)
 	if nil != cryptErr {
-		panic(111)
+		panic(cryptErr)
 	}
 	c.Data(200, "text/plain;charset=utf-8", []byte(echoStr))
 }
